@@ -3,5 +3,5 @@
 use Slim\Routing\RouteCollectorProxy;
 
 $app->group("/public", function (RouteCollectorProxy $group) {
-    $group->get("/", 'App\Controllers\TestController:getAll');
+    $group->get("/alumnos", 'App\Controllers\AlumnosController:getAll');
 });

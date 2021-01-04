@@ -10,10 +10,10 @@ class TestController extends BaseController
 {
     public function getAll(Request $request, Response $response, $args)
     {
-        $db_settings = $this->container->get('db_settings');
+        $db = $this->container->get('db');
 
         echo '<pre>';
-        var_dump($db_settings);
+        var_dump($db);
         echo '</pre>';
 
         $this->logger->warning('Something interesting happened here');
