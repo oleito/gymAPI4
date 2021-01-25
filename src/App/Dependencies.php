@@ -25,8 +25,15 @@ $container->set('db', function (ContainerInterface $c) {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ];
 
-
     $dsn = "mysql:host=" . $DB_HOST . ";dbname=" . $DB_NAME . ";charset=" . $DB_CHARSET;
 
     return new PDO($dsn, $DB_USER, $DB_PASSWORD, $opt);
+});
+
+
+//Variables de control
+$container->set('statusCode', function ($statusCode) {
+    $statusCode=200;
+    
+    return $statusCode;
 });
