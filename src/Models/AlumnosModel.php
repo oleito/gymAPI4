@@ -16,6 +16,7 @@ class AlumnosModel
         $this->logger = $c->get('logger');;
     }
 
+
     public function getAllAlumnos()
     {
         $sql = "SELECT * FROM `alumnos`";
@@ -24,27 +25,24 @@ class AlumnosModel
             $result = $query->fetchAll();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
-
             $result = null;
         }
         return $result;
     }
 
-
     public function getAlumnoById($id)
     {
-        $idAlumno[':id'] = $id;
-        $sql = "SELECT * FROM `alumnos` WHERE alumno_id = :id";
+
+        // ! Al ingresar un string devuelve FALSE
+        $sql = "SELECT * FROM `alumnos` WHERE alumnos.alumno_id = :id ;";
         try {
             $sth = $this->pdo->prepare($sql);
-            $sth->execute($idAlumno);
-            $result = $this->getAllAlumnos();
-            // marca
-            $query = $this->pdo->query($sql);
-            $result = $query->fetchAll();
+            $sth->execute(array(
+                ':id' => $id,
+            ));
+            $result = $sth->fetch();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
-
             $result = null;
         }
         return $result;
@@ -75,7 +73,6 @@ class AlumnosModel
             $result = $this->getAllAlumnos();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
-
             $result = null;
         }
         return $result;
@@ -90,7 +87,6 @@ class AlumnosModel
             $result = $query->fetchAll();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
-
             $result = null;
         }
         return $result;
@@ -99,14 +95,15 @@ class AlumnosModel
     public function deleteAlumno()
     {
         // ! revisar SQL y metodo
+        // no hay nada hecho
         $algo = 0;
         $sql = "DELETE FROM `alumnos` WHERE idalumno = $algo";
+        $sql = "SELECT * FROM `alumnos` WHERE alumnos.alumno_id = :id ;";
         try {
             $query = $this->pdo->query($sql);
             $result = $query->fetchAll();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
-
             $result = null;
         }
         return $result;
