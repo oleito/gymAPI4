@@ -31,12 +31,10 @@ class AlumnosController extends BaseController
         return $response
             ->withHeader('Content-type', 'application/json')
             ->withStatus(200);
-
     }
 
     public function post(Request $request, Response $response, $args)
     {
-
         $rq = (array)json_decode($request->getBody());
         $body = (array) $rq['body'];
 
@@ -49,4 +47,36 @@ class AlumnosController extends BaseController
             ->withHeader('Content-type', 'application/json')
             ->withStatus(200);
     }
+
+    public function put(Request $request, Response $response, $args)
+    {
+        $rq = (array)json_decode($request->getBody());
+        $body = (array) $rq['body'];
+
+        $id=$args['id'];
+
+        $p = $this->container->get('alumnos_service')->put($body, $id);
+
+        $response
+            ->getBody()
+            ->write(json_encode($p));
+        return $response
+            ->withHeader('Content-type', 'application/json')
+            ->withStatus(200);
+    }
+
+    public function delete(Request $request, Response $response, $args)
+    {
+        // ! Revisar que el valor sea un numero
+        $id=$args['id'];
+        $p = $this->container->get('alumnos_service')->deleteById($id);
+
+        $response
+            ->getBody()
+            ->write(json_encode($p));
+        return $response
+            ->withHeader('Content-type', 'application/json')
+            ->withStatus(200);
+    }
+    
 };
