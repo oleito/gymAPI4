@@ -32,8 +32,5 @@ $container->set('db', function (ContainerInterface $c) {
 
 
 //Variables de control
-$container->set('statusCode', function ($statusCode) {
-    $statusCode=200;
-    
-    return $statusCode;
-});
+// ? Esto podria ser un objeto
+$container->set('statusCode', 200);

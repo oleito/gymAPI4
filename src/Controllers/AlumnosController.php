@@ -11,26 +11,16 @@ class AlumnosController extends BaseController
     public function getAll(Request $request, Response $response, $args)
     {
         $p = $this->container->get('alumnos_service')->getAll();
-        $response
-            ->getBody()
-            ->write(json_encode($p));
-        return $response
-            ->withHeader('Content-type', 'application/json')
-            ->withStatus(200);
+        return $this->responseHandler($response, $p);
     }
 
     public function getById(Request $request, Response $response, $args)
     {
         // ! Revisar que el valor sea un numero
-        $id=$args['id'];
+        $id = $args['id'];
         $p = $this->container->get('alumnos_service')->getById($id);
 
-        $response
-            ->getBody()
-            ->write(json_encode($p));
-        return $response
-            ->withHeader('Content-type', 'application/json')
-            ->withStatus(200);
+        return $this->responseHandler($response, $p);
     }
 
     public function post(Request $request, Response $response, $args)
@@ -40,12 +30,7 @@ class AlumnosController extends BaseController
 
         $p = $this->container->get('alumnos_service')->post($body);
 
-        $response
-            ->getBody()
-            ->write(json_encode($p));
-        return $response
-            ->withHeader('Content-type', 'application/json')
-            ->withStatus(200);
+        return $this->responseHandler($response, $p);
     }
 
     public function put(Request $request, Response $response, $args)
@@ -53,30 +38,21 @@ class AlumnosController extends BaseController
         $rq = (array)json_decode($request->getBody());
         $body = (array) $rq['body'];
 
-        $id=$args['id'];
+        $id = $args['id'];
 
         $p = $this->container->get('alumnos_service')->put($body, $id);
 
-        $response
-            ->getBody()
-            ->write(json_encode($p));
-        return $response
-            ->withHeader('Content-type', 'application/json')
-            ->withStatus(200);
+        return $this->responseHandler($response, $p);
     }
 
     public function delete(Request $request, Response $response, $args)
     {
         // ! Revisar que el valor sea un numero
-        $id=$args['id'];
+        // ! Revisar que el registro no exista, sino deolver codigo
+        // $this->container->set('statusCode', 500);
+        $id = $args['id'];
         $p = $this->container->get('alumnos_service')->deleteById($id);
 
-        $response
-            ->getBody()
-            ->write(json_encode($p));
-        return $response
-            ->withHeader('Content-type', 'application/json')
-            ->withStatus(200);
+        return $this->responseHandler($response, $p);
     }
-    
 };

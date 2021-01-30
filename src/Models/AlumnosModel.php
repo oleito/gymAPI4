@@ -4,11 +4,8 @@ namespace App\Models;
 
 use Exception;
 
-class AlumnosModel
+class AlumnosModel extends BaseModel
 {
-
-    protected $pdo;
-    protected $logger;
 
     public function __construct($c)
     {
@@ -21,8 +18,9 @@ class AlumnosModel
     {
         $sql = "SELECT * FROM `alumnos`";
         try {
-            $query = $this->pdo->query($sql);
-            $result = $query->fetchAll();
+            $sth = $this->pdo->prepare($sql);
+            $sth->execute([]);
+            $result = $sth->fetchAll();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
             $result = null;
