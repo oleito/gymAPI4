@@ -7,42 +7,17 @@ use Exception;
 class AlumnosModel extends BaseModel
 {
 
-    public function __construct($c)
-    {
-        $this->pdo = $c->get('db');
-        $this->logger = $c->get('logger');;
-    }
-
-
     public function getAllAlumnos()
     {
         $sql = "SELECT * FROM `alumnos`";
-        try {
-            $sth = $this->pdo->prepare($sql);
-            $sth->execute([]);
-            $result = $sth->fetchAll();
-        } catch (Exception $e) {
-            $this->logger->warning(get_class($this), [$e->getMessage()]);
-            $result = null;
-        }
-        return $result;
+        return $this->fetchAll($sql);
     }
 
     public function getAlumnoById($id)
     {
         // ! Al ingresar un string devuelve FALSE
         $sql = "SELECT * FROM `alumnos` WHERE alumnos.alumno_id = :id ;";
-        try {
-            $sth = $this->pdo->prepare($sql);
-            $sth->execute(array(
-                ':id' => $id,
-            ));
-            $result = $sth->fetch();
-        } catch (Exception $e) {
-            $this->logger->warning(get_class($this), [$e->getMessage()]);
-            $result = null;
-        }
-        return $result;
+        return $this->fetch($sql, [':id' => $id]);
     }
 
 
@@ -64,15 +39,10 @@ class AlumnosModel extends BaseModel
                 (`alumno_id`, `first_name`, `last_name`, `last_update`) 
                 VALUES 
                 (NULL, :first_name, :last_name, :last_update);";
-        try {
-            $sth = $this->pdo->prepare($sql);
-            $sth->execute($newAlumno);
-            $result = $this->getAllAlumnos();
-        } catch (Exception $e) {
-            $this->logger->warning(get_class($this), [$e->getMessage()]);
-            $result = null;
-        }
-        return $result;
+
+        $result = $this->tryQuery($sql, $newAlumno);
+
+        return null == $result ? null : $this->getAllAlumnos();
     }
 
     public function putAlumno($a, $id)
@@ -91,30 +61,18 @@ class AlumnosModel extends BaseModel
         $updateAlumno[':id'] = $id;
 
         $sql = "UPDATE `alumnos` SET `first_name` = :first_name, `last_name` = :last_name, `last_update` = :last_update WHERE `alumnos`.`alumno_id` = :id;";
-        try {
-            $sth = $this->pdo->prepare($sql);
-            $sth->execute($updateAlumno);
-            $result = $this->getAllAlumnos();;
-        } catch (Exception $e) {
-            $this->logger->warning(get_class($this), [$e->getMessage()]);
-            $result = null;
-        }
-        return $result;
+
+        $result = $this->tryQuery($sql, $updateAlumno);
+        
+        return null == $result ? null : $this->getAllAlumnos();
     }
 
     public function deleteAlumno($id)
     {
         $sql = "DELETE FROM `alumnos` WHERE `alumnos`.`alumno_id` = :id ;";
-        try {
-            $sth = $this->pdo->prepare($sql);
-            $sth->execute(array(
-                ':id' => $id,
-            ));
-            $result = $this->getAllAlumnos();
-        } catch (Exception $e) {
-            $this->logger->warning(get_class($this), [$e->getMessage()]);
-            $result = null;
-        }
-        return $result;
+
+        $result = $this->tryQuery($sql, [':id' => $id]);
+
+        return null == $result ? null : $this->getAllAlumnos();
     }
 }
