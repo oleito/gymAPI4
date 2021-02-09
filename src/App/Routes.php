@@ -1,7 +1,5 @@
 <?php
 
-use Psr\Container\ContainerInterface;
-
 use Slim\Routing\RouteCollectorProxy;
 
 $app->group("/public", function (RouteCollectorProxy $group) {

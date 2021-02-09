@@ -10,6 +10,9 @@ $container->set('logger', function () {
     return $logger;
 });
 
+/**
+ * Incorpora instancia de base de datos al contenedor
+ */
 $container->set('db', function (ContainerInterface $c) {
 
     $config = $c->get('db_settings');
@@ -30,10 +33,6 @@ $container->set('db', function (ContainerInterface $c) {
     return new PDO($dsn, $DB_USER, $DB_PASSWORD, $opt);
 });
 
-
 //Variables de control
-$container->set('statusCode', function ($statusCode) {
-    $statusCode=200;
-    
-    return $statusCode;
-});
+// ? Esto podria ser un objeto
+$container->set('statusCode', 200);
