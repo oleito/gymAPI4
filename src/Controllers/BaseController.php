@@ -14,18 +14,14 @@ class BaseController
         $this->logger = $c->get('logger');
     }
 
-    function responseHandler($response, $body)
+    function responseHandler($response, $body, $statusCode = 200)
     {
 
-        // $responseCodeList = array(
-        //     '' => , 
-        // );
-        // $this->container->get('statusCode') != $statusCode ? $body=null : 'f';
         $response
             ->getBody()
             ->write(json_encode($body));
         return $response
             ->withHeader('Content-type', 'application/json')
-            ->withStatus(200);
+            ->withStatus($statusCode);
     }
 }

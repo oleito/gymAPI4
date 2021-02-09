@@ -23,10 +23,10 @@ class BaseModel
         try {
             $sth = $this->pdo->prepare($sql);
             $sth->execute($array);
-            return  $sth->fetchAll();
+            return $sth->fetchAll();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
-            return  null;
+            return null;
         }
     }
 
@@ -35,10 +35,10 @@ class BaseModel
         try {
             $sth = $this->pdo->prepare($sql);
             $sth->execute($array);
-            return  $sth->fetch();
+            return $sth->fetch();
         } catch (Exception $e) {
             $this->logger->warning(get_class($this), [$e->getMessage()]);
-            return  null;
+            return null;
         }
     }
 

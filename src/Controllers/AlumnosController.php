@@ -15,70 +15,70 @@ class AlumnosController extends BaseController
         return $this->responseHandler($response, $p);
     }
 
-    //
-    // public static function required() {
-    //     if (!$valorAEvaluar) {
-    //         this-errors[$nombreCampoPost] = ['message' => 'El campo ' . $nombreTextoCampo . ' no puede estar vacío']
-    //     }
-    // }
-
     public function getById(Request $request, Response $response, $args)
     {
-        $id = $args['id'];
+        $validator = new Validator($args, [
+            ['id', ['required', 'type' => 'int']]
+        ]);
 
-        // ! Revisar que el valor sea un numero
-        $p = $this->container->get('alumnos_service')->getById($id);
-
-        return $this->responseHandler($response, $p);
+        if ($validator->getStatus() === true) return $this->responseHandler($response, $this->container->get('alumnos_service')->getById($args['id']));
+        return $this->responseHandler($response, [], 400);
     }
-
-
 
     public function post(Request $request, Response $response, $args)
     {
         $rq = (array)json_decode($request->getBody());
         $body = (array) $rq['body'];
-        // ! revisar que el objeto este bien formado
 
-        $v = new Validator($body, [
-            ['first_name', [
-                'required',
-                'minlength' => '5',
-                'maxlength' => '10',
-                'type' => 'int'
-            ]],
+        $validator = new Validator($body, [
+            ['first_name', ['required', 'minlength' => '5', 'maxlength' => '7']],
             ['last_name', ['required']]
         ]);
 
-        $p = $this->container->get('alumnos_service')->post($body);
-        // $p = $v;
+        if ($validator->getStatus() === true) return $this->responseHandler($response, $this->container->get('alumnos_service')->post($body));
 
-        return $this->responseHandler($response, $p);
+        return $this->responseHandler($response, $validator->getErrors(), 400);
     }
 
     public function put(Request $request, Response $response, $args)
     {
-        // ! Revisar que el recurso exista
-        $id = $args['id'];
+        $validator = new Validator($args, [
+            ['id', ['required', 'type' => 'int']]
+        ]);
 
-        $rq = (array)json_decode($request->getBody());
-        $body = (array) $rq['body'];
-        // ! revisar que el objeto este bien formado
+        if ($validator->getStatus() === true) {
+            $curr = $this->container->get('alumnos_service')->getById($args['id']);
+            if ($curr) {
+                $rq = (array)json_decode($request->getBody());
+                $body = (array) $rq['body'];
 
-        $p = $this->container->get('alumnos_service')->put($body, $id);
+                $vali2 = new Validator($body, [
+                    ['first_name', ['required', 'minlength' => '5', 'maxlength' => '7']],
+                    ['last_name', ['required']]
+                ]);
 
-        return $this->responseHandler($response, $p);
+                if ($vali2->getStatus() === true) return $this->responseHandler($response, $this->container->get('alumnos_service')->put($body, $args['id']));
+
+                return $this->responseHandler($response, [], 400);
+            }
+            return $this->responseHandler($response, [], 404);
+        }
+        return $this->responseHandler($response, [], 400);
     }
 
     public function delete(Request $request, Response $response, $args)
     {
-        // ! Revisar que el valor sea un numero
-        $id = $args['id'];
-        // $this->container->set('statusCode', 500);
+        $validator = new Validator($args, [
+            ['id', ['required', 'type' => 'int']]
+        ]);
 
-        // ! Revisar que el registro no exista, sino deolver codigo
-        $p = $this->container->get('alumnos_service')->deleteById($id);
-
-        return $this->responseHandler($response, $p);
+        if ($validator->getStatus() === true) {
+            $curr = $this->container->get('alumnos_service')->getById($args['id']);
+            if ($curr) {
+                return $this->responseHandler($response, $this->container->get('alumnos_service')->deleteById($args['id']));
+            }
+            return $this->responseHandler($response, [], 404);
+        }
+        return $this->responseHandler($response, [], 400);
     }
 };
