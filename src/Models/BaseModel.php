@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Psr\Container\ContainerInterface;
 use Exception;
 
 class BaseModel
@@ -10,14 +9,15 @@ class BaseModel
     protected $pdo;
     protected $logger;
 
-
     public function __construct($c)
     {
         $this->pdo = $c->get('db');
         $this->logger = $c->get('logger');;
     }
 
-
+    /**
+     * Obtiene el listado completo de la consulta SQL
+     */
     protected function fetchAll($sql, $array = [])
     {
         try {
@@ -29,7 +29,10 @@ class BaseModel
             return null;
         }
     }
-
+    
+    /**
+     * Obtiene el ultimo registro de la consulta SQL
+     */
     protected function fetch($sql, $array = [])
     {
         try {
@@ -42,6 +45,9 @@ class BaseModel
         }
     }
 
+    /**
+     * Realiza una consulta SQL generica
+     */
     protected function tryQuery($sql, $a = [])
     {
         try {

@@ -14,9 +14,8 @@ class BaseController
         $this->logger = $c->get('logger');
     }
 
-    function responseHandler($response, $body, $statusCode = 200)
+    function responseHandler($response, $body = [], $statusCode = 200)
     {
-
         $response
             ->getBody()
             ->write(json_encode($body));

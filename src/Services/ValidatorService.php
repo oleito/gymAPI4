@@ -5,30 +5,34 @@ namespace App\Services;
 class ValidatorService
 {
     private $body;
-    private $params;
+    private $validators;
 
     private $isValid = true;
 
-    private $allowKeys = [];
     private $errors = [];
+
 
     public function __construct($b, array $validators = [])
     {
         $this->body = $b;
-        $this->params = $validators;
+        $this->validators = $validators;
         $this->validate();
     }
 
     function validate()
     {
 
-        foreach ($this->params as $fill) {
+        foreach ($this->validators as $fill) {
 
             // Clave del array
             $KeyName = $fill[0];
             // Listado de validadores
             $Validators = $fill[1];
 
+
+            /**
+             * Campo es requerido
+             */
             if (in_array('required', $Validators)) {
                 if (!array_key_exists($KeyName, $this->body)) {
                     $this->isValid = false;
@@ -36,6 +40,9 @@ class ValidatorService
                 }
             }
 
+            /** 
+             * Campo tiene longitud minima
+             */
             if (array_key_exists('minlength', $Validators)) {
                 if (strlen($this->body[$KeyName]) < $Validators['minlength']) {
                     $this->isValid = false;
@@ -43,6 +50,9 @@ class ValidatorService
                 }
             }
 
+            /** 
+             * Campo tiene longitud maxima
+             */
             if (array_key_exists('maxlength', $Validators)) {
                 if (strlen($this->body[$KeyName]) > $Validators['maxlength']) {
                     $this->isValid = false;;
@@ -50,8 +60,13 @@ class ValidatorService
                 }
             }
 
+            /**
+             * Campo es de un tipo especifico
+             */
             if (array_key_exists('type', $Validators)) {
                 switch ($Validators['type']) {
+
+                        // Campo tipo entero
                     case 'int':
                         $this->body[$KeyName] = filter_var($this->body[$KeyName], FILTER_VALIDATE_INT);
                         if (!is_numeric($this->body[$KeyName])) {
@@ -59,6 +74,8 @@ class ValidatorService
                             $this->isValid = false;;
                         }
                         break;
+
+                        // Campo tipo email
                     case 'email':
                         $this->body[$KeyName] = filter_var($this->body[$KeyName], FILTER_VALIDATE_EMAIL);
                         if ($this->body[$KeyName]) {
@@ -66,15 +83,12 @@ class ValidatorService
                             $this->isValid = false;;
                         }
                         break;
-                    default:
-                        # code...
-                        break;
                 }
             }
+
             if (array_key_exists('inlist', $Validators)) {
                 if (!in_array($this->body[$KeyName], $Validators['inlist'])) return true;
             }
-            array_push($this->allowKeys, $KeyName);
         }
 
         return $this;

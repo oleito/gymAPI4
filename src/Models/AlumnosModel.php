@@ -2,11 +2,8 @@
 
 namespace App\Models;
 
-use Exception;
-
 class AlumnosModel extends BaseModel
 {
-
     public function getAllAlumnos()
     {
         $sql = "SELECT * FROM `alumnos`";
@@ -20,17 +17,17 @@ class AlumnosModel extends BaseModel
         return $this->fetch($sql, [':id' => $id]);
     }
 
-
+    /**
+     * {
+     *     "body": {
+     *         "first_name": "Leandro",
+     *         "last_name": "Nicolas",
+     *         "last_update": "2021-01-04 01:13:03"
+     *     }
+     * }
+     */
     public function postAlumno($a)
     {
-        // {
-        //     "body": {
-        //         "first_name": "Leandro",
-        //         "last_name": "Nicolas",
-        //         "last_update": "2021-01-04 01:13:03"
-        //     }
-        // }
-
         $newAlumno[':first_name'] = $a['first_name'];
         $newAlumno[':last_name'] = $a['last_name'];
         $newAlumno[':last_update'] = date("Y-m-d H:i:s");
@@ -45,16 +42,17 @@ class AlumnosModel extends BaseModel
         return null == $result ? null : $this->getAllAlumnos();
     }
 
+    /**
+     * {
+     *     "body": {
+     *         "first_name": "Felipin",
+     *         "last_name": "Miguelin",
+     *         "last_update": "2021-01-04 01:13:03"
+     *     }
+     * }
+     */
     public function putAlumno($a, $id)
     {
-        // {
-        //     "body": {
-        //         "first_name": "Felipin",
-        //         "last_name": "Miguelin",
-        //         "last_update": "2021-01-04 01:13:03"
-        //     }
-        // }
-
         $updateAlumno[':first_name'] = $a['first_name'];
         $updateAlumno[':last_name'] = $a['last_name'];
         $updateAlumno[':last_update'] = $a['last_update'];
@@ -63,7 +61,7 @@ class AlumnosModel extends BaseModel
         $sql = "UPDATE `alumnos` SET `first_name` = :first_name, `last_name` = :last_name, `last_update` = :last_update WHERE `alumnos`.`alumno_id` = :id;";
 
         $result = $this->tryQuery($sql, $updateAlumno);
-        
+
         return null == $result ? null : $this->getAllAlumnos();
     }
 
